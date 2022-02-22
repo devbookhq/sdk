@@ -1,5 +1,6 @@
 import wait from '../../utils/wait'
 import Logger from '../../utils/Logger'
+import isBrowser from '../../utils/isBrowser'
 import { runner as consts } from '../constants'
 import { WebSocketConnection } from '../webSocketConnection'
 import RunnerSession from './runnerSession'
@@ -14,6 +15,7 @@ interface GetSessionResponse {
   sessionID: string
 }
 
+
 class SessionManager {
   private readonly logger = new Logger('SessionManager')
   private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
@@ -22,9 +24,11 @@ class SessionManager {
 
   // Session storage is unique for each tab. We use it so each tab has its own VM = session.
   private get cachedSessionID() {
+    if (!isBrowser) return null
     return sessionStorage.getItem(consts.STORAGE_SESSION_ID_KEY)
   }
   private set cachedSessionID(sessionID: string | null) {
+    if (!isBrowser) return
     if (sessionID === null) {
       this.logger.log('Cleared last sessionID')
       sessionStorage.removeItem(consts.STORAGE_SESSION_ID_KEY)
