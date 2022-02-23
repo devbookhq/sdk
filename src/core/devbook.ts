@@ -69,6 +69,7 @@ export enum DevbookStatus {
  * instances with the same `env`({@link Env}) parameter passed to the constructor will share filesystem and process namespace.
  */
 class Devbook {
+  private readonly runner: Runner
   private readonly context: EvaluationContext
   private readonly contextID = 'default'
   private executionID = generateExecutionID()
@@ -180,7 +181,9 @@ class Devbook {
     const setSessionStatus = (value: SessionStatus) => this.sessionStatus = value
     const setSessionID = (sessionID?: string) => this.sessionID = sessionID
 
-    this.context = Runner.obj.createContext({
+    this.runner = new Runner()
+
+    this.context = this.runner.createContext({
       debug: opts.debug,
       templateID: opts.env,
       contextID: this.contextID,

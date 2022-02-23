@@ -8,11 +8,6 @@ import EvaluationContext, {
 class Runner {
   private logger = new Logger('Runner')
 
-  private static _obj: Runner
-  static get obj() {
-    return Runner._obj || (Runner._obj = new Runner())
-  }
-
   private readonly conn = new WebSocketConnection()
 
   private readonly sessManager = new SessionManager(this.conn)
