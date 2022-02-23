@@ -19,8 +19,8 @@ const randomBehavior: Behavior = (devbook) => {
   return behavior(devbook)
 }
 
-const initialPopulation = 1
-const idealPopulation = 1
+const initialPopulation = 5
+const idealPopulation = 5
 const populationStep = 2
 
 function evolvePopulation(flock: DevbookFlock) {
@@ -60,7 +60,7 @@ async function simulate() {
     // flock2.tick(randomBehavior)
 
     console.log('--------------------')
-    await wait(2000)
+    await wait(tickInterval * 1000)
   }
 }
 

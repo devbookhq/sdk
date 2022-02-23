@@ -26,8 +26,6 @@ export class DevbookSimulator {
     if (!this.devbook) return
     try {
       await behavior(this.devbook)
-    } catch (err: any) {
-      console.error(err.message)
-    }
+    } catch (err: any) { }
   }
 }

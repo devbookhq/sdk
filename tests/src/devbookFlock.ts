@@ -1,4 +1,4 @@
-import { DevbookStatus } from '../../lib/cjs'
+import { DevbookStatus } from '@devbookhq/sdk'
 import {
   DevbookSimulator,
   Behavior,
