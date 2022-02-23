@@ -30,9 +30,8 @@ export default {
     },
   ],
   external: [
-    'react',
-    'react-dom',
-    'react/jsx-runtime',
+    'cross-fetch',
+    'cross-fetch/polyfill',
   ],
   plugins: [
     autoExternal({ builtins: false }),

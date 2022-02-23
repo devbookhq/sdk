@@ -38,6 +38,11 @@ class Runner {
     this.logger.log('__debug__loadNewSession')
     this.sessManager.reset()
   }
+
+  destroy() {
+    this.sessManager.destroy()
+    this.conn.close()
+  }
 }
 
 export default Runner

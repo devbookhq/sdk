@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 import wait from '../../utils/wait'
 import Logger from '../../utils/Logger'
 import isBrowser from '../../utils/isBrowser'
@@ -20,6 +22,7 @@ class SessionManager {
   private readonly logger = new Logger('SessionManager')
   private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
 
+  private isDestroyed = false
   private isGettingSessionActive = false
 
   // Session storage is unique for each tab. We use it so each tab has its own VM = session.
@@ -56,6 +59,11 @@ class SessionManager {
     this.session = undefined
   }
 
+  destroy() {
+    this.isDestroyed = true
+    this.session = undefined
+  }
+
   /**
    * Tries to connect back to a session with the cached session ID.
    * If no such session exists, a new session will be created and we will receive a new session ID that will be cached.
@@ -71,7 +79,7 @@ class SessionManager {
 
     // The outer while loop is to keep trying until we get a session.
     // The inner while loop is to keep pinging just acquired session.
-    while (true) {
+    while (!this.isDestroyed) {
       this.status = SessionStatus.Connecting
       try {
         const url = this.cachedSessionID
@@ -106,6 +114,7 @@ class SessionManager {
         }
 
         // We get here if we succeeded at acquiring a session.
+        if (this.isDestroyed) return
         this.session = new RunnerSession(sessionResp.sessionID)
         this.logger.log(`Acquired session "${this.session.id}"`)
 

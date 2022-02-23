@@ -249,8 +249,9 @@ class Devbook {
    * Disconnect this `Devbook` from the VM.
    */
   destroy() {
-    this.context.destroy()
     this.isDestroyed = true
+    this.context.destroy()
+    this.runner.destroy()
   }
 
   private listDir(path: string) {

@@ -1,3 +1,5 @@
+import WebSocket from 'ws'
+
 import Logger from '../utils/Logger'
 import stringify from '../utils/stringify'
 import wait from '../utils/wait'
@@ -16,6 +18,7 @@ export class WebSocketConnection {
   sessionID?: string
   private client?: WebSocket
   private logger = new Logger('WebSocketConnection')
+  private isDestroyed = false
 
   private handlers: Handler[] = []
 
@@ -94,8 +97,9 @@ export class WebSocketConnection {
     this._send(msg)
   }
 
-  close() {
+  close(destroy: boolean = false) {
     this.logger.log('Closing connection')
+    this.isDestroyed = destroy
     // 1000 - Normal Closure
     // See https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
     this.client?.close(1000)
@@ -112,27 +116,29 @@ export class WebSocketConnection {
     this.client?.send(stringify(msg))
   }
 
-  private async handleClose(event: CloseEvent) {
+  private async handleClose(event: WebSocket.CloseEvent) {
     this.logger.log('Connection closed', event)
     this.handlers.forEach(h => h.onClose())
+
+    if (this.isDestroyed) return
 
     this.logger.log(`Will try to reconnect in ${consts.WSCONN_RESTART_PERIOD / 1000}s`)
     await wait(consts.WSCONN_RESTART_PERIOD)
     this.connect()
   }
 
-  private handleError(event: Event) {
+  private handleError(event: WebSocket.ErrorEvent) {
     this.logger.error('Connection error', event)
     this.client?.close()
   }
 
-  private handleMessage(msg: MessageEvent) {
+  private handleMessage(msg: WebSocket.MessageEvent) {
     if (!msg.data) {
       this.logger.error('Message has empty data field', msg)
       return
     }
 
-    const data = JSON.parse(msg.data)
+    const data = JSON.parse(msg.data as string)
     if (!data.type) {
       this.logger.error('Message has no type', data)
       return

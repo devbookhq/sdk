@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 import Logger from '../../utils/Logger'
 import { runner as consts } from '../constants'
 

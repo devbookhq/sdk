@@ -1,6 +1,6 @@
 import { Devbook, DevbookStatus } from '@devbookhq/sdk'
 
-export type Behavior = (devbook: Devbook) => void
+export type Behavior = (devbook: Devbook) => Promise<void>
 
 export class DevbookSimulator {
   private devbook?: Devbook
@@ -18,16 +18,16 @@ export class DevbookSimulator {
   }
 
   stop() {
-    this.devbook.destroy()
+    this.devbook?.destroy()
     this.devbook = undefined
   }
 
-  tick(behavior: Behavior) {
+  async tick(behavior: Behavior) {
     if (!this.devbook) return
     try {
-      behavior(this.devbook)
-    } catch (err) {
-      console.error(err)
+      await behavior(this.devbook)
+    } catch (err: any) {
+      console.error(err.message)
     }
   }
 }

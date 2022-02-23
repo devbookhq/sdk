@@ -5,51 +5,58 @@ import randomNumber from './randomNumber'
 import wait from './wait'
 
 const behaviors: Behavior[] = [
-  (devbook) => {
+  async (devbook) => {
     devbook.runCmd('ls')
     devbook.runCmd('ls')
     devbook.runCmd('ls')
   },
-  (devbook) => devbook.fs.write('/index.js', 'code this'),
-  () => { },
+  (devbook) => devbook.fs.write('/index.js', 'console.log("testing")'),
+  async () => { },
 ]
 
-const initialPopulation = 2
-const populationCenter = 10
+const randomBehavior: Behavior = (devbook) => {
+  const behavior = randomItem(behaviors)
+  return behavior(devbook)
+}
 
-function randomizePopulation(previousPopulation: number) {
-  if (previousPopulation > populationCenter) {
-    return populationCenter - randomNumber(2)
+const initialPopulation = 1
+const idealPopulation = 5
+const populationStep = 2
+
+function evolvePopulation(flock: DevbookFlock) {
+  if (flock.size > idealPopulation) {
+    flock.size -= randomNumber(populationStep)
+  } else if (flock.size < idealPopulation) {
+    flock.size += randomNumber(populationStep)
+  } else {
+    flock.size += randomNumber(populationStep) - Math.ceil(populationStep / 2)
   }
-  if (previousPopulation < populationCenter) {
-    return previousPopulation + randomNumber(2)
-  }
-  return previousPopulation - 1 + randomNumber(2)
 }
 
 async function simulate() {
-  const flock1 = new DevbookFlock('banana-node')
-  flock1.size = initialPopulation
+  console.log('Starting stress test')
+  console.log('--------------------')
 
-  const flock2 = new DevbookFlock('banana-python')
-  flock2.size = initialPopulation
+  const flock1 = new DevbookFlock('banana-node', initialPopulation)
+  // const flock2 = new DevbookFlock('banana-python', initialPopulation)
 
   let tick = 0
 
   while (true) {
     tick++
-    console.log(`[${tick}] Total population: ${flock1.size + flock2.size}`)
+    // console.log(`[${tick}] Total population: ${flock1.size + flock2.size}`)
 
-    console.log('Flock1 stats', flock1.stats)
-    console.log('Flock2 stats', flock1.stats)
+    console.log('flock1 stats', flock1.stats)
+    // console.log('flock2 stats', flock1.stats)
 
-    flock1.size = randomizePopulation(flock1.size)
-    flock2.size = randomizePopulation(flock2.size)
+    // evolvePopulation(flock1)
+    // evolvePopulation(flock2)
 
-    flock1.tick(randomItem(behaviors))
-    flock2.tick(randomItem(behaviors))
+    // flock1.tick(randomBehavior)
+    // flock2.tick(randomBehavior)
 
-    await wait(4000)
+    console.log('--------------------')
+    await wait(5000)
   }
 }
 

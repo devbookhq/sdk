@@ -1,4 +1,3 @@
-export { useDevbook } from './react'
 export {
   Devbook,
   DevbookStatus,

@@ -68,7 +68,11 @@ export class DevbookFlock {
     }
   }
 
-  constructor(private readonly env: string) { }
+  constructor(private readonly env: string, initialSize: number = 0) {
+    for (let i = 0; i < initialSize; i++) {
+      this.addDevbook()
+    }
+  }
 
   tick(behavior: Behavior) {
     for (const devbook of this.flock) {
