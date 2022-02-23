@@ -19,7 +19,8 @@ export interface KeepAliveResponse {
  */
 class RunnerSession {
   private readonly logger: Logger
-  private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
+  // private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
+  private readonly url = `http://${consts.REMOTE_RUNNER_HOSTNAME}`
 
   constructor(
     readonly id: string,

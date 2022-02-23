@@ -20,7 +20,8 @@ interface GetSessionResponse {
 
 class SessionManager {
   private readonly logger: Logger
-  private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
+  // private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
+  private readonly url = `http://${consts.REMOTE_RUNNER_HOSTNAME}`
 
   private isDestroyed = false
   private isGettingSessionActive = false

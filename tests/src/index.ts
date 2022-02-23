@@ -5,13 +5,18 @@ import randomNumber from './randomNumber'
 import wait from './wait'
 
 const behaviors: Behavior[] = [
-  async (devbook) => {
-    devbook.runCmd('ls')
-    devbook.runCmd('ls')
-    devbook.runCmd('ls')
+  // async (devbook) => {
+  //   devbook.runCmd('ls')
+  //   devbook.runCmd('ls')
+  //   devbook.runCmd('ls')
+  // },
+  async d => { 
+    await d.fs.write('/hello', 'world')
+    const c = await d.fs.get('/hello')
+    console.log('OUT', c)
   },
-  (devbook) => devbook.fs.write('/index.js', 'console.log("testing")'),
-  async () => { },
+  // (devbook) => devbook.fs.write('/index.js', 'console.log("testing")'),
+  // async () => { },
 ]
 
 const randomBehavior: Behavior = (devbook) => {
@@ -19,8 +24,8 @@ const randomBehavior: Behavior = (devbook) => {
   return behavior(devbook)
 }
 
-const initialPopulation = 5
-const idealPopulation = 5
+const initialPopulation = 1
+const idealPopulation = 1
 const populationStep = 2
 
 function evolvePopulation(flock: DevbookFlock) {
@@ -42,21 +47,21 @@ async function simulate() {
   console.log('--------------------')
 
   const flock1 = new DevbookFlock('banana-node', initialPopulation)
-  const flock2 = new DevbookFlock('banana-python', initialPopulation)
+  // const flock2 = new DevbookFlock('banana-python', initialPopulation)
 
   let tick = 0
 
   while (true) {
     tick++
-    console.log(`[Tick #${tick}] Current sessions: ${flock1.size + flock2.size}, Elapsed time: ${tickInterval * tick} seconds`)
+    console.log(`[Tick #${tick}] Current sessions: ${flock1.size /*+ flock2.size*/}, Elapsed time: ${tickInterval * tick} seconds`)
 
     console.log('flock1 stats', flock1.stats)
-    console.log('flock2 stats', flock2.stats)
+    // console.log('flock2 stats', flock2.stats)
 
     evolvePopulation(flock1)
-    evolvePopulation(flock2)
+    // evolvePopulation(flock2)
 
-    // flock1.tick(randomBehavior)
+    flock1.tick(randomBehavior)
     // flock2.tick(randomBehavior)
 
     console.log('--------------------')

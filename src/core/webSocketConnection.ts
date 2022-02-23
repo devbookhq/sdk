@@ -14,7 +14,8 @@ interface Handler {
 }
 
 export class WebSocketConnection {
-  private readonly url = `wss://${consts.REMOTE_RUNNER_HOSTNAME}`
+  // private readonly url = `wss://${consts.REMOTE_RUNNER_HOSTNAME}`
+  private readonly url = `ws://${consts.REMOTE_RUNNER_HOSTNAME}`
   sessionID?: string
   private client?: WebSocket
   private readonly logger: Logger
