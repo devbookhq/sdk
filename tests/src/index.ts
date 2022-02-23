@@ -10,7 +10,7 @@ const behaviors: Behavior[] = [
   //   devbook.runCmd('ls')
   //   devbook.runCmd('ls')
   // },
-  async d => { 
+  async d => {
     await d.fs.write('/hello', 'world')
     const c = await d.fs.get('/hello')
     console.log('OUT', c)
@@ -54,6 +54,11 @@ async function simulate() {
   while (true) {
     tick++
     console.log(`[Tick #${tick}] Current sessions: ${flock1.size /*+ flock2.size*/}, Elapsed time: ${tickInterval * tick} seconds`)
+
+    console.log('Flock1 outputs', {
+      stdouts: flock1.devbooks.map(d => d.stdout),
+      stderrs: flock1.devbooks.map(d => d.stderr),
+    })
 
     console.log('flock1 stats', flock1.stats)
     // console.log('flock2 stats', flock2.stats)

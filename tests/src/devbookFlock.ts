@@ -5,11 +5,11 @@ import {
 } from './devbookSimulator'
 
 export class DevbookFlock {
-  private readonly flock: Array<DevbookSimulator> = []
+  readonly devbooks: Array<DevbookSimulator> = []
 
   get stats() {
     return {
-      status: this.flock
+      status: this.devbooks
         .map(devbook => devbook.stats)
         .reduce((prev, curr) => {
           switch (curr.status) {
@@ -39,7 +39,7 @@ export class DevbookFlock {
   }
 
   get size() {
-    return this.flock.length
+    return this.devbooks.length
   }
   set size(value: number) {
     const diff = value - this.size
@@ -58,11 +58,11 @@ export class DevbookFlock {
   private addDevbook() {
     const devbook = new DevbookSimulator(this.env)
     devbook.start()
-    this.flock.unshift(devbook)
+    this.devbooks.unshift(devbook)
   }
 
   private removeDevbook() {
-    const devbook = this.flock.pop()
+    const devbook = this.devbooks.pop()
     if (devbook) {
       devbook.stop()
     }
@@ -75,7 +75,7 @@ export class DevbookFlock {
   }
 
   tick(behavior: Behavior) {
-    for (const devbook of this.flock) {
+    for (const devbook of this.devbooks) {
       devbook.tick(behavior)
     }
   }
