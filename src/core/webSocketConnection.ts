@@ -17,7 +17,7 @@ export class WebSocketConnection {
   private readonly url = `wss://${consts.REMOTE_RUNNER_HOSTNAME}`
   sessionID?: string
   private client?: WebSocket
-  private logger = new Logger('WebSocketConnection')
+  private readonly logger: Logger
   private isDestroyed = false
 
   private handlers: Handler[] = []
@@ -116,6 +116,10 @@ export class WebSocketConnection {
     this.client?.send(stringify(msg))
   }
 
+  constructor(logging = false) {
+    this.logger = new Logger('WebSocketConnection', logging)
+  }
+
   private async handleClose(event: WebSocket.CloseEvent) {
     this.logger.log('Connection closed', event)
     this.handlers.forEach(h => h.onClose())
@@ -128,7 +132,7 @@ export class WebSocketConnection {
   }
 
   private handleError(event: WebSocket.ErrorEvent) {
-    this.logger.error('Connection error', event)
+    this.logger.error('Connection error', event.message)
     this.client?.close()
   }
 

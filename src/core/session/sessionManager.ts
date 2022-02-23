@@ -19,7 +19,7 @@ interface GetSessionResponse {
 
 
 class SessionManager {
-  private readonly logger = new Logger('SessionManager')
+  private readonly logger: Logger
   private readonly url = `https://${consts.REMOTE_RUNNER_HOSTNAME}`
 
   private isDestroyed = false
@@ -45,8 +45,10 @@ class SessionManager {
   status = SessionStatus.Disconnected
 
   constructor(
-    private readonly conn: WebSocketConnection
+    private readonly conn: WebSocketConnection,
+    logging = false,
   ) {
+    this.logger = new Logger('SessionManager', logging)
     this.logger.log('Initialize')
     this.getSession()
   }

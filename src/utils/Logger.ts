@@ -25,7 +25,9 @@ class Logger {
   }
 
   error(...args: any[]) {
-    console.error(`\x1b[31m[${this.id()} ERROR]\x1b[0m`, ...args)
+    if (this.isEnabled) {
+      console.error(`\x1b[31m[${this.id()} ERROR]\x1b[0m`, ...args)
+    }
   }
 }
 

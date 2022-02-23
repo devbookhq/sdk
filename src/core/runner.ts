@@ -6,7 +6,7 @@ import EvaluationContext, {
 } from './evaluationContext'
 
 class Runner {
-  private logger = new Logger('Runner')
+  private readonly logger: Logger
 
   private readonly conn = new WebSocketConnection()
 
@@ -16,6 +16,10 @@ class Runner {
   }
   get status() {
     return this.sessManager.status
+  }
+
+  constructor(logging = false) {
+    this.logger = new Logger('Runner', logging)
   }
 
   /**
