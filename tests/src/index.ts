@@ -4,19 +4,13 @@ import randomItem from './randomItem'
 import randomNumber from './randomNumber'
 import wait from './wait'
 
-const behaviors: Behavior[] = [
-  // async (devbook) => {
-  //   devbook.runCmd('ls')
-  //   devbook.runCmd('ls')
-  //   devbook.runCmd('ls')
-  // },
+const behaviors: Behavior[] = [  
   async d => {
     await d.fs.write('/hello', 'world')
     const c = await d.fs.get('/hello')
     console.log('OUT', c)
-  },
-  // (devbook) => devbook.fs.write('/index.js', 'console.log("testing")'),
-  // async () => { },
+  },  
+  async d => d.runCmd('curl google.com'),
 ]
 
 const randomBehavior: Behavior = (devbook) => {
@@ -25,7 +19,7 @@ const randomBehavior: Behavior = (devbook) => {
 }
 
 const initialPopulation = 1
-const idealPopulation = 1
+let idealPopulation = 1
 const populationStep = 2
 
 function evolvePopulation(flock: DevbookFlock) {
@@ -40,7 +34,7 @@ function evolvePopulation(flock: DevbookFlock) {
   }
 }
 
-const tickInterval = 2
+const tickInterval = 5
 
 async function simulate() {
   console.log('Starting stress test')
@@ -55,10 +49,10 @@ async function simulate() {
     tick++
     console.log(`[Tick #${tick}] Current sessions: ${flock1.size /*+ flock2.size*/}, Elapsed time: ${tickInterval * tick} seconds`)
 
-    console.log('Flock1 outputs', {
-      stdouts: flock1.devbooks.map(d => d.stdout),
-      stderrs: flock1.devbooks.map(d => d.stderr),
-    })
+    // console.log('Flock1 outputs', {
+    //   stdouts: flock1.devbooks.map(d => d.stdout),
+    //   stderrs: flock1.devbooks.map(d => d.stderr),
+    // })
 
     console.log('flock1 stats', flock1.stats)
     // console.log('flock2 stats', flock2.stats)
@@ -66,8 +60,12 @@ async function simulate() {
     evolvePopulation(flock1)
     // evolvePopulation(flock2)
 
-    flock1.tick(randomBehavior)
+    // flock1.tick(randomBehavior)
     // flock2.tick(randomBehavior)
+
+    // if (flock1.size == 1) {
+    //   idealPopulation = 2
+    // }
 
     console.log('--------------------')
     await wait(tickInterval * 1000)
